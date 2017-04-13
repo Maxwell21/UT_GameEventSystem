@@ -23,7 +23,7 @@ The plugin provide you 5 main objects
 ### GameEvent
 Type: DataAsset
 
-Function: Contains all information of an event like, what is require for being activated or what is the status for being status complete, or when the GameEvent is complete it can automatically try activate anothers. 
+Function: Contains all information of an event, like what is require for being activated or what is the status for being status complete, or when the GameEvent is complete it can automatically try activate anothers. 
 
 ### GameEventBehavior
 Type: Object (not spawnable)
@@ -34,12 +34,12 @@ Function: Can be set inside a GameEvent, the GameEventBehavior goal is the purel
 Type: ActorComponent
 
 Function: The goal of the GameEventComponent is to listen some event tags and when a GameEvent has been update and an GameEventComponent listen this GameEvent a delegate event of the GameEventComponent will be called.
-It's really useful when you have actors (world object) who listen an event and react when some changment happens, for example a quest marker above a character displaying when the GameEvent become acive. 
+It's really useful when you have actors (world object) who listen an event and react when some change happens, for example a quest marker above a character displaying when the GameEvent become active. 
 
 ### GameEventContainer
 Type: DataAsset
 
-Function: Contains only all GameEvent.
+Function: Contains only all GameEvent in an array property.
 
 ### GameEventManager
 Type: Actor
