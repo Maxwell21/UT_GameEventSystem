@@ -6,6 +6,11 @@
 class FAssetTypeActions_GameEventContainer : public FAssetTypeActions_Base
 {
 public:
+
+	/************************************************************************/
+	/* METHODS                                                              */
+	/************************************************************************/
+
 	// IAssetTypeActions Implementation
 	virtual FText GetName() const override;
 	virtual FColor GetTypeColor() const override;

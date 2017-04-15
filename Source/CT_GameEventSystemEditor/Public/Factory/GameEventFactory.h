@@ -15,6 +15,10 @@ class CT_GAMEEVENTSYSTEMEDITOR_API UGameEventFactory : public UFactory
 
 public:
 
+	/************************************************************************/
+	/* METHODS                                                              */
+	/************************************************************************/
+
 	UGameEventFactory(const class FObjectInitializer& Object);
 
 	virtual UObject* FactoryCreateNew(UClass* Class, UObject* InParent, FName Name, EObjectFlags Flags, UObject* Context, FFeedbackContext* Warn) override;
