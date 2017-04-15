@@ -18,6 +18,11 @@
 			"Name": "CT_GameEventSystem",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "CT_GameEventSystemEditor",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
 		}
 	]
 }
