@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ModuleManager.h"
+#include "MultiBoxBuilder.h"
 
 // AssetTools
 #include "IAssetTools.h"
@@ -14,6 +15,12 @@ private:
 	/************************************************************************/
 	/* PROPERTIES                                                           */
 	/************************************************************************/
+
+	TSharedPtr<FExtender> MenuExtender; 
+	
+	TSharedPtr<const FExtensionBase> Extension;
+
+	TSharedPtr<FUICommandList> CommandList;
 
 	/** All created asset type actions.  Cached here so that we can unregister them during shutdown. */
 	TArray< TSharedPtr<IAssetTypeActions> > CreatedAssetTypeActions;
@@ -30,4 +37,7 @@ public:
 	virtual void StartupModule() override;
 	virtual void ShutdownModule() override;
 	void RegisterAssetTypeAction(IAssetTools& AssetTools, TSharedRef<IAssetTypeActions> Action);
+
+	void AddMenuExtension(FMenuBuilder &Builder);
+
 };

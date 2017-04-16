@@ -39,8 +39,11 @@ public class CT_GameEventSystemEditor : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+                "EditorStyle",
                 "UnrealEd",
                 "AssetTools",
+                "Projects",
+                "LevelEditor",
                 "CT_GameEventSystem",
 				// ... add private dependencies that you statically link with here ...	
 			}
