@@ -6,6 +6,8 @@ Based on the powerful "GameplayTags" system, the CT_GameEventSystem can provide 
 ## Install
 Just download the plugin and place it inside "YourProjectUnrealEngine/Plugins/CT_GameEventSystem" 
 
+**More info in the [WIKI](https://github.com/Maxwell21/CT_GameEventSystem/wiki)**
+
 ## Require
 You need to create a list of GameplayTags with a gameplay tag datatable and add the datatable inside you project settings 
 in the "GameplayTags" part on the "Gameplay Tag table list" property.
