@@ -12,6 +12,8 @@ void FGameEventDebuggerCommands::RegisterCommands()
 void FGameEventDebuggerCommands::OnShowGameEventDebugger()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 1.5f, FColor::Red, TEXT("Game Event Debugger OPENED"));
+	TSharedRef<class FGlobalTabmanager> TabManager = FGlobalTabmanager::Get();
+	TabManager->InvokeTab(FGameEventDebuggerTab::GameEventDebbugerTabName);
 }
 
 #undef LOCTEXT_NAMESPACE

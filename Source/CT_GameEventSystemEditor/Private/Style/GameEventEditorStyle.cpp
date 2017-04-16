@@ -23,7 +23,7 @@ TSharedPtr<class ISlateStyle> FGameEventEditorStyle::Get()
 
 FName FGameEventEditorStyle::GetStyleSetName()
 {
-	static FName PaperStyleName(TEXT("GameEventDebuggerStyle"));
+	static FName PaperStyleName(TEXT("Game Event Debugger"));
 	return PaperStyleName;
 }
 
