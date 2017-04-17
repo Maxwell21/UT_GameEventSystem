@@ -44,6 +44,7 @@ public class CT_GameEventSystemEditor : ModuleRules
                 "AssetTools",
                 "Projects",
                 "LevelEditor",
+                "InputCore",
                 "WorkspaceMenuStructure",
                 "CT_GameEventSystem",
 				// ... add private dependencies that you statically link with here ...	
