@@ -5,7 +5,6 @@
 #include "UObjectIterator.h"
 #include "GameEventContainerObject.h"
 #include "GameEventObject.h"
-#include "Engine.h"
 
 const FName FGameEventDebuggerTab::GameEventDebbugerTabName = "GameEventDebuggerTab";
 
@@ -23,6 +22,12 @@ TSharedPtr<class FGameEventDebuggerTab> FGameEventDebuggerTab::Get()
 
 TSharedRef<SDockTab> FGameEventDebuggerTab::SpawnTab(const FSpawnTabArgs& TabSpawnArgs)
 {
+	GameEventDetails =
+		SNew(SVerticalBox)
+		+ SVerticalBox::Slot()
+		.FillHeight(1.f)
+	;
+
 	TSharedRef<SDockTab> SpawnedTab = SNew(SDockTab)
 	.TabRole(ETabRole::NomadTab)
 	[
@@ -94,6 +99,7 @@ TSharedRef<SDockTab> FGameEventDebuggerTab::SpawnTab(const FSpawnTabArgs& TabSpa
 								SAssignNew(GameEventListView, SListView<TSharedRef<UGameEventObject>>)
 								.SelectionMode(ESelectionMode::Single)
 								.ListItemsSource(&GameEventListItems)
+								.OnSelectionChanged(this, &FGameEventDebuggerTab::OnGameEventSelectionChanged)
 								.OnGenerateRow(this, &FGameEventDebuggerTab::ListViewOnGenerateRow)
 							]
 						]
@@ -105,6 +111,9 @@ TSharedRef<SDockTab> FGameEventDebuggerTab::SpawnTab(const FSpawnTabArgs& TabSpa
 			.FillWidth(2.7f)
 			[
 				SNew(SBorder)
+				[
+					GameEventDetails.ToSharedRef()
+				]
 			]
 		]
 	];
@@ -142,7 +151,7 @@ void FGameEventDebuggerTab::DisplayList()
 		{
 
 			TArray<UGameEventObject*> GameEvents = GameEventManager->GameEventContainer->GameEvents;
-			if (GameEvents.Num() > 0)
+			if (GameEvents.Num() > 0 && GameEventListItems.Num() == 0)
 			{
 				GameEventListItems.Empty();
 				for (UGameEventObject* const& GameEvent : GameEvents)
@@ -165,3 +174,40 @@ TSharedRef<ITableRow> FGameEventDebuggerTab::ListViewOnGenerateRow(TSharedRef<UG
 		];
 }
 
+void FGameEventDebuggerTab::OnGameEventSelectionChanged(TSharedPtr<UGameEventObject> InItem, ESelectInfo::Type SelectInfo)
+{
+
+	ActivateTagsListItems.Empty();
+	for (FGameplayTag Tag : InItem->GameEvent->ActivationRequire)
+	{
+		FName TagName = Tag.GetTagName();
+		ActivateTagsListItems.Add(MakeShareable(new FName(TagName)));
+	}
+
+	GameEventDetails = 
+		SNew(SVerticalBox)
+		+SVerticalBox::Slot()
+		.FillHeight(1.f)
+		[
+			SNew(SVerticalBox)
+			+SVerticalBox::Slot()
+			.FillHeight(1.f)
+			[
+				SAssignNew(ActivateTagsListView, SListView<TSharedRef<FName>>)
+				.SelectionMode(ESelectionMode::None)
+				.ListItemsSource(&ActivateTagsListItems)
+				.OnGenerateRow(this, &FGameEventDebuggerTab::ListViewActivateTagsOnGenerateRow)
+			]
+		]
+	;
+}
+
+TSharedRef<ITableRow> FGameEventDebuggerTab::ListViewActivateTagsOnGenerateRow(TSharedRef<FName> Item, const TSharedRef<STableViewBase>& OwnerTable)
+{
+	return
+		SNew(STableRow< TSharedPtr<FString> >, OwnerTable)
+		[
+			SNew(STextBlock).Text(FText::FromName(*Item))
+		];
+
+}

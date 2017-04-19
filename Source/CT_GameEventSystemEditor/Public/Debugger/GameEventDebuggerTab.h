@@ -6,6 +6,7 @@
 #include "Input/Reply.h"
 #include "SListView.h"
 #include "SharedPointer.h"
+#include "GameplayTagContainer.h"
 
 /**
  * 
@@ -29,6 +30,14 @@ public:
 	/** List of everything that we want to display */
 	TArray<TSharedRef<class UGameEventObject>> GameEventListItems;
 
+	TSharedPtr<SVerticalBox> GameEventDetails;
+
+	/** The list view widget for our activate tags list */
+	TSharedPtr<SListView<TSharedRef<FName>>> ActivateTagsListView;
+
+	/** List of everything that we want to display */
+	TArray<TSharedRef<FName>> ActivateTagsListItems;
+
 	/************************************************************************/
 	/* METHODS                                                              */
 	/************************************************************************/
@@ -46,5 +55,9 @@ public:
 	void DisplayList();
 
 	TSharedRef<ITableRow> ListViewOnGenerateRow(TSharedRef<UGameEventObject> Item, const TSharedRef<STableViewBase>& OwnerTable);
+
+	void OnGameEventSelectionChanged(TSharedPtr<UGameEventObject> InItem, ESelectInfo::Type SelectInfo);
+
+	TSharedRef<ITableRow> ListViewActivateTagsOnGenerateRow(TSharedRef<FName> Item, const TSharedRef<STableViewBase>& OwnerTable);
 
 };
