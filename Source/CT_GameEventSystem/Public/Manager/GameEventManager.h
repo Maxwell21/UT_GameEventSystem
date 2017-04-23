@@ -7,7 +7,7 @@
 
 class UGameEventContainer;
 class UGameEventContainerObject;
-class UGameEventObject;
+class UGameEvent;
 
 UCLASS()
 class CT_GAMEEVENTSYSTEM_API AGameEventManager : public AActor
@@ -63,7 +63,7 @@ public:
 	* @return UGameEvent* - Instance found or nullptr
 	*/
 	UFUNCTION(Category = "Game Event Manager", BlueprintCallable)
-	virtual UGameEventObject* GetGameEventById(FGuid Id);
+	virtual UGameEvent* GetGameEventById(FGuid Id);
 
 	/**
 	* Add custom tag can be useful for system like quest
@@ -72,7 +72,7 @@ public:
 	* @param FGameplayTagContainer CustomTags
 	*/
 	UFUNCTION(Category = "Game Event Manager", BlueprintCallable)
-	virtual void AddCustomTagsToEvent(FGameplayTagContainer CustomTags, UGameEventObject* GameEvent);
+	virtual void AddCustomTagsToEvent(FGameplayTagContainer CustomTags, UGameEvent* GameEvent);
 
 	/**
 	* Remove custom tag
@@ -80,6 +80,6 @@ public:
 	* @param FGameplayTagContainer CustomTags
 	*/
 	UFUNCTION(Category = "Game Event Manager", BlueprintCallable)
-	virtual void RemoveCustomTagsToEvent(FGameplayTagContainer CustomTags, UGameEventObject* GameEvent);
+	virtual void RemoveCustomTagsToEvent(FGameplayTagContainer CustomTags, UGameEvent* GameEvent);
 
 };

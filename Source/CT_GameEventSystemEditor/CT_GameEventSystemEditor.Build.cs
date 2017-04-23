@@ -30,17 +30,23 @@ public class CT_GameEventSystemEditor : ModuleRules
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
-			
-		
-		PrivateDependencyModuleNames.AddRange(
-			new string[]
-			{
-				"CoreUObject",
-				"Engine",
-				"Slate",
-				"SlateCore",
+
+
+        PrivateDependencyModuleNames.AddRange(
+            new string[]
+            {
+                "CoreUObject",
+                "Engine",
+                "Slate",
+                "SlateCore",
+                "EditorStyle",
                 "UnrealEd",
                 "AssetTools",
+                "Projects",
+                "LevelEditor",
+                "InputCore",
+                "WorkspaceMenuStructure",
+                "GameplayTags",
                 "CT_GameEventSystem",
 				// ... add private dependencies that you statically link with here ...	
 			}

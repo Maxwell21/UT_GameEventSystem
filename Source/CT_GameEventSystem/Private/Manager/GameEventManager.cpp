@@ -1,7 +1,7 @@
 #include "CT_GameEventSystem.h"
 #include "GameEventManager.h"
 #include "Object/GameEventContainerObject.h"
-#include "Object/GameEventObject.h"
+#include "Object/GameEvent.h"
 
 // Sets default values
 AGameEventManager::AGameEventManager()
@@ -47,7 +47,7 @@ bool AGameEventManager::TryActivateEvents(FGameplayTagContainer EventsTags)
 		return false;
 
 	bool HasActivatedEvents = false;
-	for (UGameEventObject* const& GameEvent : this->GameEventContainer->GameEvents)
+	for (UGameEvent* const& GameEvent : this->GameEventContainer->GameEvents)
 	{
 		if (GameEvent->MatchEventsTags(EventsTags))
 		{
@@ -61,13 +61,13 @@ bool AGameEventManager::TryActivateEvents(FGameplayTagContainer EventsTags)
 	return HasActivatedEvents;
 }
 
-UGameEventObject* AGameEventManager::GetGameEventById(FGuid Id)
+UGameEvent* AGameEventManager::GetGameEventById(FGuid Id)
 {
 	if (this->GameEventContainer)
 	{
-		for (UGameEventObject* const& GameEventObject : this->GameEventContainer->GameEvents)
+		for (UGameEvent* const& GameEventObject : this->GameEventContainer->GameEvents)
 		{
-			if (GameEventObject->GameEvent->Id == Id && GameEventObject->IsActive())
+			if (GameEventObject->Id == Id && GameEventObject->IsActive())
 				return GameEventObject;
 		}
 	}
@@ -75,13 +75,13 @@ UGameEventObject* AGameEventManager::GetGameEventById(FGuid Id)
 	return nullptr;
 }
 
-void AGameEventManager::AddCustomTagsToEvent(FGameplayTagContainer CustomTags, UGameEventObject* GameEvent)
+void AGameEventManager::AddCustomTagsToEvent(FGameplayTagContainer CustomTags, UGameEvent* GameEvent)
 {
 	if (GameEvent)
 		GameEvent->AddCustomTags(CustomTags);
 }
 
-void AGameEventManager::RemoveCustomTagsToEvent(FGameplayTagContainer CustomTags, UGameEventObject* GameEvent)
+void AGameEventManager::RemoveCustomTagsToEvent(FGameplayTagContainer CustomTags, UGameEvent* GameEvent)
 {
 	if (GameEvent)
 		GameEvent->RemoveCustomTags(CustomTags);

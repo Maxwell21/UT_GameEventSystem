@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ModuleManager.h"
+#include "MultiBoxBuilder.h"
 
 // AssetTools
 #include "IAssetTools.h"
@@ -30,4 +31,5 @@ public:
 	virtual void StartupModule() override;
 	virtual void ShutdownModule() override;
 	void RegisterAssetTypeAction(IAssetTools& AssetTools, TSharedRef<IAssetTypeActions> Action);
+
 };
