@@ -3,15 +3,17 @@
 #include "UObject/NoExportTypes.h"
 #include "UObject/ScriptMacros.h"
 #include "GameplayTagContainer.h"
+#include "GameplayTaskOwnerInterface.h"
 #include "GameEvent.generated.h"
 
 class UGameEventContainerObject; 
+class UGameplayTask;
 
 /**
  * 
  */
 UCLASS(BlueprintType, Blueprintable)
-class CT_GAMEEVENTSYSTEM_API UGameEvent : public UObject
+class CT_GAMEEVENTSYSTEM_API UGameEvent : public UObject, public IGameplayTaskOwnerInterface
 {
 	GENERATED_BODY()
 
@@ -72,6 +74,9 @@ public:
 	UPROPERTY()
 	UGameEventContainerObject* GameEventContainerObject;
 
+	UPROPERTY()
+	TArray<UGameplayTask*>	ActiveTasks;
+
 	/************************************************************************/
 	/* METHODS                                                              */
 	/************************************************************************/
@@ -124,19 +129,19 @@ public:
 	/**
 	* Called when the GameEvent is activate
 	*/
-	UFUNCTION(Category = "Game Event Behavior", BlueprintCallable, BlueprintImplementableEvent)
+	UFUNCTION(Category = "Game Event", BlueprintCallable, BlueprintImplementableEvent)
 	void OnActivated();
 
 	/**
 	* Condition to turn the GameEvent to the "CompleteStatus"
 	*/
-	UFUNCTION(Category = "Game Event Behavior", BlueprintCallable, BlueprintNativeEvent)
+	UFUNCTION(Category = "Game Event", BlueprintCallable, BlueprintNativeEvent)
 	bool CompleteCondition();
 
 	/**
 	* Called when the GameEvent is complete
 	*/
-	UFUNCTION(Category = "Game Event Behavior", BlueprintCallable, BlueprintImplementableEvent)
+	UFUNCTION(Category = "Game Event", BlueprintCallable, BlueprintImplementableEvent)
 	void OnCompleted();
 
 protected:
@@ -144,7 +149,7 @@ protected:
 	/**
 	* Need to be called each time you want to check if the event is complete
 	*/
-	UFUNCTION(Category = "Game Event Behavior", BlueprintCallable)
+	UFUNCTION(Category = "Game Event", BlueprintCallable)
 	void UpdateBehavior();
 
 	/**
@@ -163,4 +168,15 @@ protected:
 	* If some GameEventCompoenent listen the same "ActivationRequire" we inform them 
 	*/
 	virtual void TryActivateAllComponents();
+
+	// --------------------------------------
+	//	IGameplayTaskOwnerInterface
+	// --------------------------------------	
+	virtual UGameplayTasksComponent* GetGameplayTasksComponent(const UGameplayTask& Task) const override;
+	virtual AActor* GetGameplayTaskOwner(const UGameplayTask* Task) const override;
+	virtual AActor* GetGameplayTaskAvatar(const UGameplayTask* Task) const override;
+	virtual void OnGameplayTaskInitialized(UGameplayTask& Task) override;
+	virtual void OnGameplayTaskActivated(UGameplayTask& Task) override;
+	virtual void OnGameplayTaskDeactivated(UGameplayTask& Task) override;
+
 };

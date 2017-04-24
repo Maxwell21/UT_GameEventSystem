@@ -4,6 +4,8 @@
 #include "GameFramework/Actor.h"
 #include "Kismet/GameplayStatics.h"
 #include "Component/GameEventComponent.h"
+#include "GameEventTask.h"
+#include "GameplayTasksComponent.h"
 
 void UGameEvent::Init(UGameEventContainerObject* GameEventContainerObjectInstance)
 {
@@ -123,3 +125,43 @@ void UGameEvent::TryActivateAllComponents()
 	}
 }
 
+// --------------------------------------
+//	IGameplayTaskOwnerInterface
+// --------------------------------------	
+
+UGameplayTasksComponent* UGameEvent::GetGameplayTasksComponent(const UGameplayTask& Task) const
+{
+	if (AGameEventManager* GameEventManager = this->GameEventContainerObject->GameEventManager)
+		return Cast<UGameplayTasksComponent>(GameEventManager->GetComponentByClass(UGameplayTasksComponent::StaticClass()));
+
+	return nullptr;
+}
+
+AActor* UGameEvent::GetGameplayTaskOwner(const UGameplayTask* Task) const
+{
+	AGameEventManager* GameEventManager = this->GameEventContainerObject->GameEventManager;
+	return  GameEventManager;
+}
+
+AActor* UGameEvent::GetGameplayTaskAvatar(const UGameplayTask* Task) const
+{
+	AGameEventManager* GameEventManager = this->GameEventContainerObject->GameEventManager;
+	return  GameEventManager;
+}
+
+void UGameEvent::OnGameplayTaskInitialized(UGameplayTask& Task)
+{
+ 	UGameEventTask* GameEventTask = Cast<UGameEventTask>(&Task);
+ 	if (GameEventTask)
+ 		GameEventTask->GameEvent = this;
+}
+
+void UGameEvent::OnGameplayTaskActivated(UGameplayTask& Task)
+{
+ 	ActiveTasks.Add(&Task);
+}
+
+void UGameEvent::OnGameplayTaskDeactivated(UGameplayTask& Task)
+{
+ 	ActiveTasks.Remove(&Task);
+}
