@@ -6,7 +6,8 @@
 
 
 /**
- * 
+ * Game Event Container
+ * A simple container of your GameEvent
  */
 UCLASS()
 class CT_GAMEEVENTSYSTEM_API UGameEventContainer : public UDataAsset

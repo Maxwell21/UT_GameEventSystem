@@ -10,7 +10,9 @@ class UGameEventContainerObject;
 class UGameplayTask;
 
 /**
- * 
+ * Game Event
+ * Flexible game event based on Gameplay Tags
+ * All behavior inside this object
  */
 UCLASS(BlueprintType, Blueprintable)
 class CT_GAMEEVENTSYSTEM_API UGameEvent : public UObject, public IGameplayTaskOwnerInterface
@@ -69,6 +71,12 @@ public:
 	* that tags will be added for cancel this event
 	*/
 	UPROPERTY(Category = "Game Event", BlueprintReadOnly, EditDefaultsOnly)
+	FGameplayTagContainer CancelWithTags;
+
+	/**
+	* that tags will be added for cancel this event
+	*/
+	UPROPERTY(Category = "Game Event", BlueprintReadOnly, EditDefaultsOnly)
 	FGameplayTagContainer CancelStatus;
 
 	/**
@@ -121,6 +129,21 @@ public:
 	virtual bool IsActive();
 
 	/**
+	* Check if this event is cancel
+	*
+	* @return bool - true if cancel, false otherwise
+	*/
+	UFUNCTION(Category = "Game Event", BlueprintCallable)
+	virtual bool IsCancel();
+
+	/**
+	* Check if this event is complete
+	*
+	* @return bool - true if complete, false otherwise
+	*/
+	virtual bool IsComplete();
+
+	/**
 	* Add custom tag can be useful for system like quest
 	* Example: if your UI need to have the active quest selected
 	*
@@ -135,6 +158,11 @@ public:
 	*/
  	virtual void RemoveCustomTags(FGameplayTagContainer Tags);
 
+	/**
+	* Cancel this event
+	*/
+	virtual void TryCancelEvent(FGameplayTagContainer Tags);
+	
 	/**
 	* Called when the GameEvent is activate
 	*/
@@ -153,6 +181,12 @@ public:
 	UFUNCTION(Category = "Game Event", BlueprintCallable, BlueprintImplementableEvent)
 	void OnCompleted();
 
+	/**
+	* Called when the GameEvent is cancel
+	*/
+	UFUNCTION(Category = "Game Event", BlueprintCallable, BlueprintImplementableEvent)
+	void OnCanceled();
+
 protected:
 
 	/**
@@ -160,6 +194,12 @@ protected:
 	*/
 	UFUNCTION(Category = "Game Event", BlueprintCallable)
 	void UpdateBehavior();
+
+	/**
+	* Cancel this event
+	*/
+	UFUNCTION(Category = "Game Event", BlueprintCallable)
+	virtual void CancelEvent();
 
 	/**
 	* Called when the event is complete we check if we can activate others event with the "TryActivateEventOnComplete" property
@@ -174,9 +214,21 @@ protected:
 	virtual bool IsAbleActivate();
 
 	/**
+	* Check if is not complete and is active
+	*
+	* @return bool - true if able to cancel, false otherwise
+	*/
+	virtual bool IsAbleCancel();
+
+	/**
 	* If some GameEventCompoenent listen the same "ActivationRequire" we inform them 
 	*/
 	virtual void TryActivateAllComponents();
+
+	/**
+	* Cancel all tasks
+	*/
+	virtual void PerformCancelEvent();
 
 	// --------------------------------------
 	//	IGameplayTaskOwnerInterface

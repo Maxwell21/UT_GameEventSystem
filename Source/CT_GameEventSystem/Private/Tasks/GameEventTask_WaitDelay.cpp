@@ -20,8 +20,11 @@ void UGameEventTask_WaitDelay::Activate()
 
 void UGameEventTask_WaitDelay::OnTimeFinish()
 {
-	OnFinish.Broadcast();
-	EndTask();
+	if (this->CheckIsCanceled() == false)
+	{
+		OnFinish.Broadcast();
+		EndTask();
+	}
 }
 
 void UGameEventTask_WaitDelay::OnDestroy(bool bInOwnerFinished)

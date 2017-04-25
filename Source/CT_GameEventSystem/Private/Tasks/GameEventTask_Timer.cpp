@@ -29,14 +29,18 @@ void UGameEventTask_Timer::Activate()
 
 void UGameEventTask_Timer::OnUpdateTimer()
 {
-	this->TimeElapsed += Time;
-	this->OnUpdate.Broadcast(this->TimeElapsed);
-
-	if (this->TimeElapsed >= this->RestartAt && this->Complete == false)
+	if (this->CheckIsCanceled() == false)
 	{
-		this->Complete = true;
-		this->OnFinishTimer();
+		this->TimeElapsed += Time;
+		this->OnUpdate.Broadcast(this->TimeElapsed);
+
+		if (this->TimeElapsed >= this->RestartAt && this->Complete == false)
+		{
+			this->Complete = true;
+			this->OnFinishTimer();
+		}
 	}
+
 }
 
 void UGameEventTask_Timer::OnFinishTimer()

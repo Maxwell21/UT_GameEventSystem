@@ -8,7 +8,12 @@
 class UGameEventContainer;
 class UGameEventContainerObject;
 class UGameEvent;
+class UGameplayTasksComponent;
 
+/**
+ * Game Event Manager
+ * Main object contains events and manipulate them
+ */
 UCLASS()
 class CT_GAMEEVENTSYSTEM_API AGameEventManager : public AActor
 {
@@ -26,12 +31,15 @@ public:
 	UPROPERTY(Category = "Game Event Manager", BlueprintReadWrite)
 	UGameEventContainerObject* GameEventContainer;
 
+	UPROPERTY(Category = "Game Event Manager", BlueprintReadWrite, EditDefaultsOnly)
+	UGameplayTasksComponent* GameplayTaskComponent;
+
 	/************************************************************************/
 	/* METHODS                                                              */
 	/************************************************************************/
 
 	// Sets default values for this actor's properties
-	AGameEventManager();
+	AGameEventManager(const FObjectInitializer& Obj);
 
 protected:
 
@@ -89,5 +97,12 @@ public:
 	*/
 	UFUNCTION(Category = "Game Event Manager", BlueprintCallable)
 	virtual void RemoveCustomTagsToEvent(FGameplayTagContainer CustomTags, UGameEvent* GameEvent);
-
+	
+	/**
+	* Try cancel active events (automatically called when an events has been activated)
+	*
+	* @param FGameplayTagContainer CustomTags
+	*/
+	UFUNCTION(Category = "Game Event Manager", BlueprintCallable)
+	virtual void TryCancelEvents(FGameplayTagContainer EventsTags);
 };

@@ -40,4 +40,11 @@ protected:
 		MyObj->InstanceName = InstanceName;
 		return MyObj;
 	}
+
+	/**
+	* If the GameEvent is canceled so we stop the task
+	*
+	* @bool - Is canceled
+	*/
+	virtual bool CheckIsCanceled();
 };

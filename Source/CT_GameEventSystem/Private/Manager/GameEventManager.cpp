@@ -3,11 +3,11 @@
 #include "Object/GameEventContainerObject.h"
 #include "Object/GameEvent.h"
 
-// Sets default values
-AGameEventManager::AGameEventManager()
+AGameEventManager::AGameEventManager(const FObjectInitializer& Obj) : Super(Obj)
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
+
+	this->GameplayTaskComponent = Obj.CreateDefaultSubobject<UGameplayTasksComponent>(this, FName("Gameplay Task Component"));
 }
 
 void AGameEventManager::Init()
@@ -54,7 +54,10 @@ bool AGameEventManager::TryActivateEvents(FGameplayTagContainer EventsTags)
 			bool HasActivated = GameEvent->TryActivate();
 
 			if (HasActivated)
+			{
+				this->TryCancelEvents(EventsTags);
 				HasActivatedEvents = true;
+			}
 		}
 	}
 
@@ -100,4 +103,13 @@ void AGameEventManager::RemoveCustomTagsToEvent(FGameplayTagContainer CustomTags
 {
 	if (GameEvent)
 		GameEvent->RemoveCustomTags(CustomTags);
+}
+
+void AGameEventManager::TryCancelEvents(FGameplayTagContainer EventsTags)
+{
+	for (UGameEvent* const& GameEvent : this->GameEventContainer->GameEvents)
+	{
+ 		if (GameEvent->IsActive())
+ 			GameEvent->TryCancelEvent(EventsTags);
+	}
 }

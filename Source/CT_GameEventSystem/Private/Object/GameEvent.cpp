@@ -28,7 +28,7 @@ bool UGameEvent::TryActivate()
 			this->CurrentTags.AddTag(GameplayTag);
 		}
 
-		// all tags is added ? 
+		// all tags are added ? 
 		if (!this->CurrentTags.IsEmpty())
 		{
 			// active the event
@@ -64,7 +64,26 @@ void UGameEvent::PerformCompleteState()
 
 bool UGameEvent::IsActive()
 {
-	return this->CurrentTags.HasAnyExact(this->AddOnActivate) && !this->CurrentTags.HasAnyExact(this->CompleteStatus);
+	/**
+	* Check is contain AddOnActivate tags
+	* and is not complete
+	* and is not canceled
+	*/
+	return 
+		this->CurrentTags.HasAnyExact(this->AddOnActivate) 
+		&& !this->CurrentTags.HasAnyExact(this->CompleteStatus)
+		&& !this->IsCancel()
+	;
+}
+
+bool UGameEvent::IsCancel()
+{
+	return this->CurrentTags.HasAnyExact(this->CancelStatus);
+}
+
+bool UGameEvent::IsComplete()
+{
+	return this->CurrentTags.HasAnyExact(this->CompleteStatus);
 }
 
 void UGameEvent::AddCustomTags(FGameplayTagContainer Tags)
@@ -83,6 +102,19 @@ void UGameEvent::RemoveCustomTags(FGameplayTagContainer Tags)
 	}
 }
 
+void UGameEvent::TryCancelEvent(FGameplayTagContainer Tags)
+{
+	if (this->IsAbleCancel() && this->CancelWithTags.HasAny(Tags))
+	{
+		for (FGameplayTag const& GameplayTag : this->CancelStatus)
+		{
+			this->CurrentTags.AddTag(GameplayTag);
+		}
+
+		this->PerformCancelEvent();
+	}
+}
+
 bool UGameEvent::CompleteCondition_Implementation()
 {
 	return false;
@@ -92,6 +124,19 @@ void UGameEvent::UpdateBehavior()
 {
 	if (this->CompleteCondition())
 		this->PerformCompleteState();
+}
+
+void UGameEvent::CancelEvent()
+{
+	if (this->IsAbleCancel())
+	{
+		for (FGameplayTag const& GameplayTag : this->CancelStatus)
+		{
+			this->CurrentTags.AddTag(GameplayTag);
+		}
+
+		this->PerformCancelEvent();
+	}
 }
 
 void UGameEvent::TryActivateOtherEvents()
@@ -104,7 +149,15 @@ void UGameEvent::TryActivateOtherEvents()
 
 bool UGameEvent::IsAbleActivate()
 {
-	return !this->CurrentTags.HasAnyExact(this->AddOnActivate) && !this->CurrentTags.HasAnyExact(this->CompleteStatus);
+	return
+		!this->IsActive()
+		&& !this->IsCancel()
+	;
+}
+
+bool UGameEvent::IsAbleCancel()
+{
+	return !this->IsComplete() && this->IsActive();
 }
 
 void UGameEvent::TryActivateAllComponents()
@@ -123,6 +176,11 @@ void UGameEvent::TryActivateAllComponents()
 			}
 		}
 	}
+}
+
+void UGameEvent::PerformCancelEvent()
+{
+	this->OnCanceled();
 }
 
 // --------------------------------------
