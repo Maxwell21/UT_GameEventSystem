@@ -65,14 +65,29 @@ UGameEvent* AGameEventManager::GetGameEventById(FGuid Id)
 {
 	if (this->GameEventContainer)
 	{
-		for (UGameEvent* const& GameEventObject : this->GameEventContainer->GameEvents)
+		for (UGameEvent* const& GameEvent : this->GameEventContainer->GameEvents)
 		{
-			if (GameEventObject->Id == Id && GameEventObject->IsActive())
-				return GameEventObject;
+			if (GameEvent->Id == Id && GameEvent->IsActive())
+				return GameEvent;
 		}
 	}
 
 	return nullptr;
+}
+
+TArray<UGameEvent*> AGameEventManager::GetActiveGameEvents()
+{
+	TArray<UGameEvent*> GameEvents;
+	if (this->GameEventContainer)
+	{
+		for (UGameEvent* const& GameEvent : this->GameEventContainer->GameEvents)
+		{
+			if (GameEvent->IsActive())
+				GameEvents.Add(GameEvent);
+		}
+	}
+
+	return GameEvents;
 }
 
 void AGameEventManager::AddCustomTagsToEvent(FGameplayTagContainer CustomTags, UGameEvent* GameEvent)

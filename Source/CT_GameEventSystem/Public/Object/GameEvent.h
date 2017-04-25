@@ -66,6 +66,12 @@ public:
 	FGameplayTagContainer TryActivateEventOnComplete;
 
 	/**
+	* that tags will be added for cancel this event
+	*/
+	UPROPERTY(Category = "Game Event", BlueprintReadOnly, EditDefaultsOnly)
+	FGameplayTagContainer CancelStatus;
+
+	/**
 	* Current Game Event tags
 	*/
 	UPROPERTY(Category = "Game Event", BlueprintReadOnly)
@@ -74,6 +80,9 @@ public:
 	UPROPERTY()
 	UGameEventContainerObject* GameEventContainerObject;
 
+	/*
+	* Current Active tasks related to this GameEvent
+	*/
 	UPROPERTY()
 	TArray<UGameplayTask*>	ActiveTasks;
 

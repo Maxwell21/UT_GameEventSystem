@@ -7,6 +7,7 @@
 
 class UGameEvent;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FWaitTimerFinishDelegate);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWaitTimerDelegate, float, TimeElapsed);
 
 /**
@@ -17,19 +18,20 @@ class CT_GAMEEVENTSYSTEM_API UGameEventTask_Timer : public UGameEventTask
 {
 	GENERATED_BODY()
 
+public:
+
+	static const float TASK_TIME_LIMIT;
+
 	/************************************************************************/
 	/* PROPERTIES                                                           */
 	/************************************************************************/
 
-public:
+protected: 
 
 	float Time;
-	
+	float RestartAt;
 	float TimeElapsed;
-
-	bool Looping;
-
-protected: 
+	bool Complete;
 
 	UPROPERTY()
 	FTimerHandle TimerHandle;
@@ -37,19 +39,29 @@ protected:
 	UPROPERTY(BlueprintAssignable)
 	FWaitTimerDelegate OnUpdate;
 
+	UPROPERTY(BlueprintAssignable)
+	FWaitTimerFinishDelegate OnFinish;
+
+
 	/************************************************************************/
 	/* METHODS                                                              */
 	/************************************************************************/
 
-	/** loop specified time. This is functionally the same as a standard Timer node. */
-	UFUNCTION(BlueprintCallable, Category = "Game Event|Tasks", meta = (HidePin = "OwningGameEvent", DefaultToSelf = "OwningGameEvent", BlueprintInternalUseOnly = "TRUE"))
-	static UGameEventTask_Timer* Timer(UGameEvent* OwningGameEvent, float Time, bool Looping = true);
+public:
+
+	void Initialize(float InTime, float InRestartAt);
 
 protected:
+
+	/** loop specified time. This is functionally the same as a standard Timer node. */
+	UFUNCTION(BlueprintCallable, Category = "Game Event|Tasks", meta = (HidePin = "OwningGameEvent", DefaultToSelf = "OwningGameEvent", BlueprintInternalUseOnly = "TRUE"))
+	static UGameEventTask_Timer* Timer(UGameEvent* OwningGameEvent, float Time, float RestartAt = 30.f);
 
 	virtual void Activate() override;
 
 	void OnUpdateTimer();
+
+	void OnFinishTimer();
 
 	virtual void OnDestroy(bool bInOwnerFinished);
 

@@ -40,6 +40,7 @@ public class CT_GameEventSystem : ModuleRules
                 "Slate",
                 "SlateCore",
                 "GameplayTags",
+                "GameplayTasks",
 				// ... add private dependencies that you statically link with here ...	
 			}
             );

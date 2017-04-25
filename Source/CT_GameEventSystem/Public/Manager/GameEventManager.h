@@ -66,6 +66,14 @@ public:
 	virtual UGameEvent* GetGameEventById(FGuid Id);
 
 	/**
+	* Get all active GameEvents
+	*
+	* @return TArray<UGameEvent*> - Empty array or with valid active GameEvent
+	*/
+	UFUNCTION(Category = "Game Event Manager", BlueprintCallable)
+	virtual TArray<UGameEvent*> GetActiveGameEvents();
+
+	/**
 	* Add custom tag can be useful for system like quest
 	* Example: if your UI need to have the active quest selected
 	*
