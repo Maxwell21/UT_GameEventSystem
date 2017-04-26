@@ -171,8 +171,26 @@ void UGameEvent::TryActivateAllComponents()
 		{
 			if (UGameEventComponent* GameEventComponent = Cast<UGameEventComponent>(Actor->GetComponentByClass(UGameEventComponent::StaticClass())))
 			{
-				if (GameEventComponent->TagsListener.HasAnyExact(this->CurrentTags) && GameEventComponent->OnGameEventActivate.IsBound())
-					GameEventComponent->OnGameEventActivate.Broadcast(this, this->GameEventContainerObject->GameEventManager);
+				if (GameEventComponent->TagsListener.HasAnyExact(this->CurrentTags) && GameEventComponent->OnCall.IsBound())
+					GameEventComponent->OnCall.Broadcast(this, this->GameEventContainerObject->GameEventManager);
+			}
+		}
+	}
+}
+
+void UGameEvent::DispatchToComponents(FGameplayTagContainer Tags)
+{
+	if (this->GameEventContainerObject && this->GameEventContainerObject->GameEventManager)
+	{
+		TArray<AActor*> Actors;
+		UGameplayStatics::GetAllActorsOfClass(this->GameEventContainerObject->GameEventManager, AActor::StaticClass(), Actors);
+
+		for (AActor* const& Actor : Actors)
+		{
+			if (UGameEventComponent* GameEventComponent = Cast<UGameEventComponent>(Actor->GetComponentByClass(UGameEventComponent::StaticClass())))
+			{
+				if (GameEventComponent->TagsListener.HasAnyExact(Tags) && GameEventComponent->OnCall.IsBound())
+					GameEventComponent->OnCall.Broadcast(this, this->GameEventContainerObject->GameEventManager);
 			}
 		}
 	}

@@ -5,7 +5,7 @@
 #include "GameEventManager.h"
 #include "GameEventComponent.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGameEventComponentOnActivate, UGameEvent*, GameEventObject, AGameEventManager*, GameEventManager);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGameEventComponentOnCall, UGameEvent*, GameEventObject, AGameEventManager*, GameEventManager);
 
 UCLASS( ClassGroup=(CrystalTools), meta=(BlueprintSpawnableComponent) )
 class CT_GAMEEVENTSYSTEM_API UGameEventComponent : public UActorComponent
@@ -25,10 +25,10 @@ public:
 	FGameplayTagContainer TagsListener;
 
 	/**
-	* Delegate event called when the GameEvent is activate
+	* Delegate event called when the listener is called
 	*/
 	UPROPERTY(Category = "Game Event Component", BlueprintAssignable, BlueprintReadWrite)
-	FGameEventComponentOnActivate OnGameEventActivate;
+	FGameEventComponentOnCall OnCall;
 	
 	/************************************************************************/
 	/* METHODS                                                              */

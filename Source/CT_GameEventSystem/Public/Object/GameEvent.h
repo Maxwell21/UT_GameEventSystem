@@ -226,6 +226,14 @@ protected:
 	virtual void TryActivateAllComponents();
 
 	/**
+	* Dispatch and check if components listen tags given
+	*
+	* @param FGameplayTagContainer Tags - Check if the component is listen that tags
+	*/
+	UFUNCTION(Category = "Game Event", BlueprintCallable)
+	virtual void DispatchToComponents(FGameplayTagContainer Tags);
+
+	/**
 	* Cancel all tasks
 	*/
 	virtual void PerformCancelEvent();
