@@ -1,4 +1,4 @@
-# CT_GameEventSystem
+# CT_GameEventSystem 1.0
 A flexible event system in Unreal Engine 4
 
 Based on the powerful "GameplayTags" system, the CT_GameEventSystem can provide a flexible event system.
