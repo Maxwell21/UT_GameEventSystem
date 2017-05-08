@@ -93,6 +93,36 @@ TArray<UGameEvent*> AGameEventManager::GetActiveGameEvents()
 	return GameEvents;
 }
 
+TArray<UGameEvent*> AGameEventManager::GetCompleteGameEvents()
+{
+	TArray<UGameEvent*> GameEvents;
+	if (this->GameEventContainer)
+	{
+		for (UGameEvent* const& GameEvent : this->GameEventContainer->GameEvents)
+		{
+			if (GameEvent->IsComplete())
+				GameEvents.Add(GameEvent);
+		}
+	}
+
+	return GameEvents;
+}
+
+TArray<UGameEvent*> AGameEventManager::GetCancelGameEvents()
+{
+	TArray<UGameEvent*> GameEvents;
+	if (this->GameEventContainer)
+	{
+		for (UGameEvent* const& GameEvent : this->GameEventContainer->GameEvents)
+		{
+			if (GameEvent->IsCancel())
+				GameEvents.Add(GameEvent);
+		}
+	}
+
+	return GameEvents;
+}
+
 void AGameEventManager::AddCustomTagsToEvent(FGameplayTagContainer CustomTags, UGameEvent* GameEvent)
 {
 	if (GameEvent)

@@ -82,6 +82,22 @@ public:
 	virtual TArray<UGameEvent*> GetActiveGameEvents();
 
 	/**
+	* Get all complete GameEvents
+	*
+	* @return TArray<UGameEvent*> - Empty array or with valid complete GameEvent
+	*/
+	UFUNCTION(Category = "Game Event Manager", BlueprintCallable)
+	virtual TArray<UGameEvent*> GetCompleteGameEvents();
+
+	/**
+	* Get all GameEvents canceled
+	*
+	* @return TArray<UGameEvent*> - Empty array or with canceled GameEvent
+	*/
+	UFUNCTION(Category = "Game Event Manager", BlueprintCallable)
+	virtual TArray<UGameEvent*> GetCancelGameEvents();
+
+	/**
 	* Add custom tag can be useful for system like quest
 	* Example: if your UI need to have the active quest selected
 	*
