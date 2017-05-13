@@ -2,16 +2,16 @@
 
 #include "GameEventDebuggerCommands.h"
 #include "GameEventDebuggerTab.h"
-#include "AssetTypeActions_GameEvent.h"
-#include "AssetTypeActions_GameEventContainer.h"
-#include "AssetTypeActions_GameEventBehavior.h"
-#include "AssetTypeActions_GameEventManager.h"
 
-#include "AssetToolsModule.h"
 #include "LevelEditor.h"
 #include "UIAction.h"
 #include "WorkspaceMenuStructure.h"
 #include "WorkspaceMenuStructureModule.h"
+
+#include "AssetToolsModule.h"
+#include "AssetTypeActions_GameEvent.h"
+#include "AssetTypeActions_GameEventContainer.h"
+#include "AssetTypeActions_GameEventManager.h"
 
 #define LOCTEXT_NAMESPACE "FCT_GameEventSystemEditorModule"
 
@@ -33,7 +33,6 @@ void FCT_GameEventSystemEditorModule::StartupModule()
 	GameEventAssetCategoryBit = AssetTools.RegisterAdvancedAssetCategory(FName(TEXT("CT_GameEventSystem")), LOCTEXT("GameEventAssetCategory", "GameEvent"));
 	RegisterAssetTypeAction(AssetTools, MakeShareable(new FAssetTypeActions_GameEvent));
 	RegisterAssetTypeAction(AssetTools, MakeShareable(new FAssetTypeActions_GameEventContainer));
-	RegisterAssetTypeAction(AssetTools, MakeShareable(new FAssetTypeActions_GameEventBehavior));
 	RegisterAssetTypeAction(AssetTools, MakeShareable(new FAssetTypeActions_GameEventManager));
 	// End register asset types
 
@@ -64,5 +63,5 @@ void FCT_GameEventSystemEditorModule::RegisterAssetTypeAction(IAssetTools& Asset
 }
 
 #undef LOCTEXT_NAMESPACE
-	
+
 IMPLEMENT_MODULE(FCT_GameEventSystemEditorModule, CT_GameEventSystemEditor)

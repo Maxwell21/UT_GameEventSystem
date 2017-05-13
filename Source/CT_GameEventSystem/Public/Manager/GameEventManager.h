@@ -7,8 +7,13 @@
 
 class UGameEventContainer;
 class UGameEventContainerObject;
-class UGameEventObject;
+class UGameEvent;
+class UGameplayTasksComponent;
 
+/**
+ * Game Event Manager
+ * Main object contains events and manipulate them
+ */
 UCLASS()
 class CT_GAMEEVENTSYSTEM_API AGameEventManager : public AActor
 {
@@ -26,12 +31,15 @@ public:
 	UPROPERTY(Category = "Game Event Manager", BlueprintReadWrite)
 	UGameEventContainerObject* GameEventContainer;
 
+	UPROPERTY(Category = "Game Event Manager", BlueprintReadWrite, EditDefaultsOnly)
+	UGameplayTasksComponent* GameplayTaskComponent;
+
 	/************************************************************************/
 	/* METHODS                                                              */
 	/************************************************************************/
 
 	// Sets default values for this actor's properties
-	AGameEventManager();
+	AGameEventManager(const FObjectInitializer& Obj);
 
 protected:
 
@@ -63,7 +71,31 @@ public:
 	* @return UGameEvent* - Instance found or nullptr
 	*/
 	UFUNCTION(Category = "Game Event Manager", BlueprintCallable)
-	virtual UGameEventObject* GetGameEventById(FGuid Id);
+	virtual UGameEvent* GetGameEventById(FGuid Id);
+
+	/**
+	* Get all active GameEvents
+	*
+	* @return TArray<UGameEvent*> - Empty array or with valid active GameEvent
+	*/
+	UFUNCTION(Category = "Game Event Manager", BlueprintCallable)
+	virtual TArray<UGameEvent*> GetActiveGameEvents();
+
+	/**
+	* Get all complete GameEvents
+	*
+	* @return TArray<UGameEvent*> - Empty array or with valid complete GameEvent
+	*/
+	UFUNCTION(Category = "Game Event Manager", BlueprintCallable)
+	virtual TArray<UGameEvent*> GetCompleteGameEvents();
+
+	/**
+	* Get all GameEvents canceled
+	*
+	* @return TArray<UGameEvent*> - Empty array or with canceled GameEvent
+	*/
+	UFUNCTION(Category = "Game Event Manager", BlueprintCallable)
+	virtual TArray<UGameEvent*> GetCancelGameEvents();
 
 	/**
 	* Add custom tag can be useful for system like quest
@@ -72,7 +104,7 @@ public:
 	* @param FGameplayTagContainer CustomTags
 	*/
 	UFUNCTION(Category = "Game Event Manager", BlueprintCallable)
-	virtual void AddCustomTagsToEvent(FGameplayTagContainer CustomTags, UGameEventObject* GameEvent);
+	virtual void AddCustomTagsToEvent(FGameplayTagContainer CustomTags, UGameEvent* GameEvent);
 
 	/**
 	* Remove custom tag
@@ -80,6 +112,13 @@ public:
 	* @param FGameplayTagContainer CustomTags
 	*/
 	UFUNCTION(Category = "Game Event Manager", BlueprintCallable)
-	virtual void RemoveCustomTagsToEvent(FGameplayTagContainer CustomTags, UGameEventObject* GameEvent);
-
+	virtual void RemoveCustomTagsToEvent(FGameplayTagContainer CustomTags, UGameEvent* GameEvent);
+	
+	/**
+	* Try cancel active events (automatically called when an events has been activated)
+	*
+	* @param FGameplayTagContainer CustomTags
+	*/
+	UFUNCTION(Category = "Game Event Manager", BlueprintCallable)
+	virtual void TryCancelEvents(FGameplayTagContainer EventsTags);
 };

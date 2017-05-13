@@ -1,13 +1,13 @@
 #include "CT_GameEventSystem.h"
 #include "GameEventManager.h"
 #include "Object/GameEventContainerObject.h"
-#include "Object/GameEventObject.h"
+#include "Object/GameEvent.h"
 
-// Sets default values
-AGameEventManager::AGameEventManager()
+AGameEventManager::AGameEventManager(const FObjectInitializer& Obj) : Super(Obj)
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
+
+	this->GameplayTaskComponent = Obj.CreateDefaultSubobject<UGameplayTasksComponent>(this, FName("Gameplay Task Component"));
 }
 
 void AGameEventManager::Init()
@@ -47,42 +47,99 @@ bool AGameEventManager::TryActivateEvents(FGameplayTagContainer EventsTags)
 		return false;
 
 	bool HasActivatedEvents = false;
-	for (UGameEventObject* const& GameEvent : this->GameEventContainer->GameEvents)
+	for (UGameEvent* const& GameEvent : this->GameEventContainer->GameEvents)
 	{
 		if (GameEvent->MatchEventsTags(EventsTags))
 		{
 			bool HasActivated = GameEvent->TryActivate();
 
 			if (HasActivated)
+			{
+				this->TryCancelEvents(EventsTags);
 				HasActivatedEvents = true;
+			}
 		}
 	}
 
 	return HasActivatedEvents;
 }
 
-UGameEventObject* AGameEventManager::GetGameEventById(FGuid Id)
+UGameEvent* AGameEventManager::GetGameEventById(FGuid Id)
 {
 	if (this->GameEventContainer)
 	{
-		for (UGameEventObject* const& GameEventObject : this->GameEventContainer->GameEvents)
+		for (UGameEvent* const& GameEvent : this->GameEventContainer->GameEvents)
 		{
-			if (GameEventObject->GameEvent->Id == Id && GameEventObject->IsActive())
-				return GameEventObject;
+			if (GameEvent->Id == Id && GameEvent->IsActive())
+				return GameEvent;
 		}
 	}
 
 	return nullptr;
 }
 
-void AGameEventManager::AddCustomTagsToEvent(FGameplayTagContainer CustomTags, UGameEventObject* GameEvent)
+TArray<UGameEvent*> AGameEventManager::GetActiveGameEvents()
+{
+	TArray<UGameEvent*> GameEvents;
+	if (this->GameEventContainer)
+	{
+		for (UGameEvent* const& GameEvent : this->GameEventContainer->GameEvents)
+		{
+			if (GameEvent->IsActive())
+				GameEvents.Add(GameEvent);
+		}
+	}
+
+	return GameEvents;
+}
+
+TArray<UGameEvent*> AGameEventManager::GetCompleteGameEvents()
+{
+	TArray<UGameEvent*> GameEvents;
+	if (this->GameEventContainer)
+	{
+		for (UGameEvent* const& GameEvent : this->GameEventContainer->GameEvents)
+		{
+			if (GameEvent->IsComplete())
+				GameEvents.Add(GameEvent);
+		}
+	}
+
+	return GameEvents;
+}
+
+TArray<UGameEvent*> AGameEventManager::GetCancelGameEvents()
+{
+	TArray<UGameEvent*> GameEvents;
+	if (this->GameEventContainer)
+	{
+		for (UGameEvent* const& GameEvent : this->GameEventContainer->GameEvents)
+		{
+			if (GameEvent->IsCancel())
+				GameEvents.Add(GameEvent);
+		}
+	}
+
+	return GameEvents;
+}
+
+void AGameEventManager::AddCustomTagsToEvent(FGameplayTagContainer CustomTags, UGameEvent* GameEvent)
 {
 	if (GameEvent)
 		GameEvent->AddCustomTags(CustomTags);
 }
 
-void AGameEventManager::RemoveCustomTagsToEvent(FGameplayTagContainer CustomTags, UGameEventObject* GameEvent)
+void AGameEventManager::RemoveCustomTagsToEvent(FGameplayTagContainer CustomTags, UGameEvent* GameEvent)
 {
 	if (GameEvent)
 		GameEvent->RemoveCustomTags(CustomTags);
+}
+
+void AGameEventManager::TryCancelEvents(FGameplayTagContainer EventsTags)
+{
+	for (UGameEvent* const& GameEvent : this->GameEventContainer->GameEvents)
+	{
+ 		if (GameEvent->IsActive())
+ 			GameEvent->TryCancelEvent(EventsTags);
+	}
 }

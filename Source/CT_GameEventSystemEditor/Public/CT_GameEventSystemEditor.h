@@ -16,19 +16,19 @@ private:
 	/* PROPERTIES                                                           */
 	/************************************************************************/
 
-	TSharedPtr<FExtender> MenuExtender; 
-	
+	TSharedPtr<FExtender> MenuExtender;
+
 	TSharedPtr<const FExtensionBase> Extension;
 
 	TSharedPtr<FUICommandList> CommandList;
 
 	/** All created asset type actions.  Cached here so that we can unregister them during shutdown. */
 	TArray< TSharedPtr<IAssetTypeActions> > CreatedAssetTypeActions;
-	
+
 	EAssetTypeCategories::Type GameEventAssetCategoryBit;
 
 public:
-	
+
 	/************************************************************************/
 	/* METHODS                                                              */
 	/************************************************************************/

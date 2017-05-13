@@ -1,7 +1,7 @@
 #include "CT_GameEventSystem.h"
 #include "GameEventContainerObject.h"
 #include "GameEventContainer.h"
-#include "GameEventObject.h"
+#include "GameEvent.h"
 #include "GameEventManager.h"
 
 void UGameEventContainerObject::Init(UGameEventContainer* GameEventContainer, AGameEventManager* GameEventManagerInstance)
@@ -11,12 +11,11 @@ void UGameEventContainerObject::Init(UGameEventContainer* GameEventContainer, AG
 
 	this->GameEventManager = GameEventManagerInstance;
 
-	for (UGameEvent* const& GameEvent : GameEventContainer->GameEventsBase)
+	for (TSubclassOf<UGameEvent> const& GameEventClass : GameEventContainer->GameEventsBase)
 	{
-		UGameEventObject* EventObjectInstance = NewObject<UGameEventObject>(this);
+		UGameEvent* EventObjectInstance = NewObject<UGameEvent>(this, GameEventClass);
 		if (EventObjectInstance)
 		{
-			EventObjectInstance->GameEvent = GameEvent;
 			EventObjectInstance->GameEventContainerObject = this;
 			this->GameEvents.AddUnique(EventObjectInstance);
 		}

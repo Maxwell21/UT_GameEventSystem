@@ -4,7 +4,7 @@
 #include "GameEventContainerObject.generated.h"
 
 class UGameEventContainer;
-class UGameEventObject;
+class UGameEvent;
 class AGameEventManager;
 
 /**
@@ -22,7 +22,7 @@ public:
 	/************************************************************************/
 
 	UPROPERTY(Category = "Game Event Container", BlueprintReadWrite)
-	TArray<UGameEventObject*> GameEvents;
+	TArray<UGameEvent*> GameEvents;
 
 	UPROPERTY()
 	AGameEventManager* GameEventManager;

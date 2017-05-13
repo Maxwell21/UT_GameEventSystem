@@ -1,12 +1,13 @@
 #pragma once
 
 #include "Engine/DataAsset.h"
+#include "GameEvent.h"
 #include "GameEventContainer.generated.h"
 
-class UGameEvent;
 
 /**
- * 
+ * Game Event Container
+ * A simple container of your GameEvent
  */
 UCLASS()
 class CT_GAMEEVENTSYSTEM_API UGameEventContainer : public UDataAsset
@@ -20,6 +21,6 @@ public:
 	/************************************************************************/
 
 	UPROPERTY(Category = "Game Event Container", BlueprintReadWrite, EditDefaultsOnly, meta = (DisplayName = "Game Events"))
-	TArray<UGameEvent*> GameEventsBase;
+	TArray<TSubclassOf<UGameEvent>> GameEventsBase;
 
 };
