@@ -29,7 +29,7 @@ void UGameEventTask_Timer::Activate()
 
 void UGameEventTask_Timer::OnUpdateTimer()
 {
-	if (this->CheckIsCanceled() == false)
+	if (this->CheckIsCanceled() == false || this->CheckIsComplete() == false)
 	{
 		this->TimeElapsed += Time;
 		this->OnUpdate.Broadcast(this->TimeElapsed);

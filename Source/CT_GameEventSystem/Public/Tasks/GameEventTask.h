@@ -47,4 +47,11 @@ protected:
 	* @bool - Is canceled
 	*/
 	virtual bool CheckIsCanceled();
+
+	/**
+	* If the GameEvent is complete so we stop the task
+	*
+	* @bool - Is complete
+	*/
+	virtual bool CheckIsComplete();
 };

@@ -11,3 +11,14 @@ bool UGameEventTask::CheckIsCanceled()
 
 	return false;
 }
+
+bool UGameEventTask::CheckIsComplete()
+{
+	if (this->GameEvent && this->GameEvent->IsComplete())
+	{
+		this->EndTask();
+		return true;
+	}
+
+	return false;
+}
