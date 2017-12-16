@@ -1,12 +1,12 @@
-# CT_GameEventSystem 1.0
+# UT_GameEventSystem 1.0
 A flexible event system in Unreal Engine 4
 
-Based on the powerful "GameplayTags" system, the CT_GameEventSystem can provide a flexible event system.
+Based on the powerful "GameplayTags" system, the UT_GameEventSystem can provide a flexible event system.
 
 ## Install
-Just download the plugin and place it inside "YourProjectUnrealEngine/Plugins/CT_GameEventSystem"
+Just download the plugin and place it inside "YourProjectUnrealEngine/Plugins/UT_GameEventSystem"
 
-**More info in the [WIKI](https://github.com/Maxwell21/CT_GameEventSystem/wiki)**
+**More info in the [WIKI](https://github.com/Maxwell21/UT_GameEventSystem/wiki)**
 
 ## Require
 You need to create a list of GameplayTags with a gameplay tag datatable and add the datatable inside you project settings
