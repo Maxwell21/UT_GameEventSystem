@@ -20,7 +20,7 @@ class UGameplayTasksComponent;
  * Main object contains events and manipulate them
  */
 UCLASS()
-class UT_GAMEEVENTSYSTEM_API AGameEventManager : public AActor
+class UT_GAMEEVENTSYSTEM_API AGameEventManager : public APawn
 {
 	GENERATED_BODY()
 

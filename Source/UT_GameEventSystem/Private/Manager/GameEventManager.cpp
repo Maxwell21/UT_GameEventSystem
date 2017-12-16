@@ -6,6 +6,7 @@
 #include "GameEventManager.h"
 #include "Object/GameEventContainerObject.h"
 #include "Object/GameEvent.h"
+#include "Engine.h"
 
 AGameEventManager::AGameEventManager(const FObjectInitializer& Obj) : Super(Obj)
 {

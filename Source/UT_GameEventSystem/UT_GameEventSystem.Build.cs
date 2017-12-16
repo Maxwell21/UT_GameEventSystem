@@ -46,8 +46,7 @@ public class UT_GameEventSystem : ModuleRules
 			}
             );
 
-
-		DynamicallyLoadedModuleNames.AddRange(
+        DynamicallyLoadedModuleNames.AddRange(
 			new string[]
 			{
 				// ... add any modules that your module loads dynamically here ...
