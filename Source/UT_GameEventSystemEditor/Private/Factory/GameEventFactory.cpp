@@ -14,8 +14,6 @@
 #include "KismetEditorUtilities.h"
 #include "Engine/DataTable.h"
 
-#include "Widgets/SWindow.h"
-#include "Widgets/SCompoundWidget.h"
 #include "Widgets/Layout/SBorder.h"
 #include "STextBlock.h"
 #include "SEditableText.h"
@@ -28,113 +26,112 @@
 
 void SGameEventSetupFactory::Construct(const FArguments& InArgs)
 {
-	// Load the content browser module to display an asset picker
-	FContentBrowserModule& ContentBrowserModule = FModuleManager::LoadModuleChecked<FContentBrowserModule>("ContentBrowser");
+	this->GEFactory = InArgs._GEFactory;
 
-	FAssetPickerConfig AssetPickerConfig;
+	if (this->GEFactory)
+	{
+		// Load the content browser module to display an asset picker
+		FContentBrowserModule& ContentBrowserModule = FModuleManager::LoadModuleChecked<FContentBrowserModule>("ContentBrowser");
+		FAssetPickerConfig AssetPickerConfig;
 
-	/** The asset picker will only show GameplayTagDatatable */
-	AssetPickerConfig.Filter.ClassNames.Add(UDataTable::StaticClass()->GetFName());
-	AssetPickerConfig.Filter.bRecursiveClasses = true;
+		/** The asset picker will only show GameplayTagDatatable */
+		AssetPickerConfig.Filter.ClassNames.Add(UDataTable::StaticClass()->GetFName());
+		AssetPickerConfig.Filter.bRecursiveClasses = true;
 
-	/** The delegate that fires when an asset was selected */
-	//AssetPickerConfig.OnAssetSelected = FOnAssetSelected::CreateUObject(this, &SGameEventSetupFactory::OnTargetDatatableSelected);
+		/** The delegate that fires when an asset was selected */
+		AssetPickerConfig.OnAssetSelected = FOnAssetSelected::CreateUObject(this->GEFactory, &UGameEventFactory::OnTargetDatatableSelected);
 
-	/** The default view mode should be a list view */
-	AssetPickerConfig.InitialAssetViewType = EAssetViewType::List;
+		/** The default view mode should be a list view */
+		AssetPickerConfig.InitialAssetViewType = EAssetViewType::List;
 
-	ChildSlot
-	.VAlign(VAlign_Fill)
-	.HAlign(HAlign_Fill)
-	[
-		SNew(SBorder)
-		.BorderImage(FEditorStyle::GetBrush("Menu.Background"))
+		ChildSlot
+		.VAlign(VAlign_Fill)
+		.HAlign(HAlign_Fill)
 		[
-			SNew(SVerticalBox)
-			+SVerticalBox::Slot()
-			.AutoHeight()
+			SNew(SBorder)
+			.BorderImage(FEditorStyle::GetBrush("Menu.Background"))
 			[
-				ContentBrowserModule.Get().CreateAssetPicker(AssetPickerConfig)
+				SNew(SVerticalBox)
+				+SVerticalBox::Slot()
+				.AutoHeight()
+				[
+					ContentBrowserModule.Get().CreateAssetPicker(AssetPickerConfig)
+				]
+				+SVerticalBox::Slot()
+				.AutoHeight()
+				[
+					SNew(SHorizontalBox)
+					+SHorizontalBox::Slot()
+					[
+						SNew(STextBlock)
+						.Text(LOCTEXT("GameEventFactory_NameLabel", "Event Name"))
+					]
+					+SHorizontalBox::Slot()
+					[
+						SNew(SEditableText)
+						.Text(LOCTEXT("GameEventFactory_Name", "My Event"))
+						.OnTextChanged(this, &SGameEventSetupFactory::OnGameEventNameChanged)
+						.SelectAllTextWhenFocused(true)
+						.RevertTextOnEscape(true)
+					]
+				]
+				+SVerticalBox::Slot()
+				.AutoHeight()
+				[
+					SNew(SHorizontalBox)
+					+SHorizontalBox::Slot()
+					[
+						SNew(STextBlock)
+						.Text(LOCTEXT("GameEventFactory_ActivateTagLabel", "Require tag for activate this event"))
+					]
+					+SHorizontalBox::Slot()
+					[
+						SNew(SEditableText)
+						.Text(LOCTEXT("GameEventFactory_ActivateTag", "Activated"))
+						.OnTextChanged(this, &SGameEventSetupFactory::OnGameEventActivateTagChanged)
+						.SelectAllTextWhenFocused(true)
+						.RevertTextOnEscape(true)
+					]
+				]
+				+SVerticalBox::Slot()
+				.AutoHeight()
+				[
+					SNew(SHorizontalBox)
+					+SHorizontalBox::Slot()
+					[
+						SNew(STextBlock)
+						.Text(LOCTEXT("GameEventFactory_CompleteTagLabel", "Tag automatically added when this event is complete"))
+					]
+					+SHorizontalBox::Slot()
+					[
+						SNew(SEditableText)
+						.Text(LOCTEXT("GameEventFactory_CompleteTag", "Completed"))
+						.OnTextChanged(this, &SGameEventSetupFactory::OnGameEventCompleteTagChanged)
+						.SelectAllTextWhenFocused(true)
+						.RevertTextOnEscape(true)
+					]
+				]
+				+SVerticalBox::Slot()
+				.AutoHeight()
+				[
+					SNew(SHorizontalBox)
+					+SHorizontalBox::Slot()
+					[
+						SNew(STextBlock)
+						.Text(LOCTEXT("GameEventFactory_CancelTagLabel", "Require tag for cancel this event"))
+					]
+					+SHorizontalBox::Slot()
+					[
+						SNew(SEditableText)
+						.Text(LOCTEXT("GameEventFactory_CancelTag", "Cancel"))
+						.OnTextChanged(this, &SGameEventSetupFactory::OnGameEventCancelTagChanged)
+						.SelectAllTextWhenFocused(true)
+						.RevertTextOnEscape(true)
+					]
+				]
 			]
-			+SVerticalBox::Slot()
-			.AutoHeight()
-			[
-				SNew(SHorizontalBox)
-				+SHorizontalBox::Slot()
-				[
-					SNew(STextBlock)
-					.Text(LOCTEXT("GameEventFactory_NameLabel", "Event Name"))
-				]
-				+SHorizontalBox::Slot()
-				[
-					SNew(SEditableText)
-					.Text(LOCTEXT("GameEventFactory_Name", "My Event"))
-					.OnTextChanged(this, &SGameEventSetupFactory::OnGameEventNameChanged)
-					.SelectAllTextWhenFocused(true)
-					.RevertTextOnEscape(true)
-				]
-			]
-			+SVerticalBox::Slot()
-			.AutoHeight()
-			[
-				SNew(SHorizontalBox)
-				+SHorizontalBox::Slot()
-				[
-					SNew(STextBlock)
-					.Text(LOCTEXT("GameEventFactory_ActivateTagLabel", "Require tag for activate this event"))
-				]
-				+SHorizontalBox::Slot()
-				[
-					SNew(SEditableText)
-					.Text(LOCTEXT("GameEventFactory_ActivateTag", "Activated"))
-					.OnTextChanged(this, &SGameEventSetupFactory::OnGameEventActivateTagChanged)
-					.SelectAllTextWhenFocused(true)
-					.RevertTextOnEscape(true)
-				]
-			]
-			+SVerticalBox::Slot()
-			.AutoHeight()
-			[
-				SNew(SHorizontalBox)
-				+SHorizontalBox::Slot()
-				[
-					SNew(STextBlock)
-					.Text(LOCTEXT("GameEventFactory_CompleteTagLabel", "Tag automatically added when this event is complete"))
-				]
-				+SHorizontalBox::Slot()
-				[
-					SNew(SEditableText)
-					.Text(LOCTEXT("GameEventFactory_CompleteTag", "Completed"))
-					.OnTextChanged(this, &SGameEventSetupFactory::OnGameEventCompleteTagChanged)
-					.SelectAllTextWhenFocused(true)
-					.RevertTextOnEscape(true)
-				]
-			]
-			+SVerticalBox::Slot()
-			.AutoHeight()
-			[
-				SNew(SHorizontalBox)
-				+SHorizontalBox::Slot()
-				[
-					SNew(STextBlock)
-					.Text(LOCTEXT("GameEventFactory_CancelTagLabel", "Require tag for cancel this event"))
-				]
-				+SHorizontalBox::Slot()
-				[
-					SNew(SEditableText)
-					.Text(LOCTEXT("GameEventFactory_CancelTag", "Cancel"))
-					.OnTextChanged(this, &SGameEventSetupFactory::OnGameEventCancelTagChanged)
-					.SelectAllTextWhenFocused(true)
-					.RevertTextOnEscape(true)
-				]
-			]
-		]
-	];
-}
-
-void SGameEventSetupFactory::OnTargetDatatableSelected(const FAssetData& SelectedAsset)
-{
-	this->GameplayTagDatatable = Cast<UDataTable>(SelectedAsset.GetAsset());
+		];
+	}
 }
 
 void SGameEventSetupFactory::OnGameEventNameChanged(const FText& NewText)
@@ -170,7 +167,9 @@ UGameEventFactory::UGameEventFactory(const class FObjectInitializer& Object) : S
 
 bool UGameEventFactory::ConfigureProperties()
 {
-	TSharedRef<SGameEventSetupFactory> GameEventFactoryWidget = SNew(SGameEventSetupFactory);
+	TSharedRef<SGameEventSetupFactory> GameEventFactoryWidget = SNew(SGameEventSetupFactory)
+		.GEFactory(this);
+
 	this->GESetup = GameEventFactoryWidget;
 
 	PickerWindow = SNew(SWindow)
@@ -198,6 +197,12 @@ UObject* UGameEventFactory::FactoryCreateNew(UClass* Class, UObject* InParent, F
 		NewGameEvent->Id = FGuid::NewGuid();
 
 	return Blueprint;
+}
+
+void UGameEventFactory::OnTargetDatatableSelected(const FAssetData& SelectedAsset)
+{
+	if (this->GESetup.IsValid())
+		this->GESetup->GameplayTagDatatable = Cast<UDataTable>(SelectedAsset.GetAsset());
 }
 
 #undef LOCTEXT_NAMESPACE

@@ -8,14 +8,14 @@
 #include "CoreMinimal.h"
 #include "SlateFwd.h"
 #include "Widgets/DeclarativeSyntaxSupport.h"
+#include "Widgets/SWindow.h"
+#include "Widgets/SCompoundWidget.h"
 #include "UObject/ObjectMacros.h"
 #include "Factories/Factory.h"
 #include "GameEventFactory.generated.h"
 
 struct FAssetData;
 class UDataTable;
-class SWindow;
-class SCompoundWidget;
 
 #define LOCTEXT_NAMESPACE "GameEvent"
 
@@ -26,7 +26,7 @@ public:
 
 	SLATE_BEGIN_ARGS(SGameEventSetupFactory)
 	{}
-
+		SLATE_ARGUMENT(class UGameEventFactory*, GEFactory)
 	SLATE_END_ARGS()
 
 	/************************************************************************/
@@ -42,6 +42,12 @@ public:
 	FName CancelTag;
 
 	UDataTable* GameplayTagDatatable;
+
+protected:
+
+	class UGameEventFactory* GEFactory;
+
+public:
 
 	/************************************************************************/
 	/* METHODS                                                              */
@@ -64,12 +70,9 @@ public:
 		;
 	};
 
-
 	/************************************************************************/
 	/* DELEGATES                                                            */
 	/************************************************************************/
-
-	void OnTargetDatatableSelected(const FAssetData& SelectedAsset);
 
 	void OnGameEventNameChanged(const FText& NewText);
 
@@ -110,6 +113,12 @@ public:
 	virtual bool ConfigureProperties() override;
 
 	virtual UObject* FactoryCreateNew(UClass* Class, UObject* InParent, FName Name, EObjectFlags Flags, UObject* Context, FFeedbackContext* Warn) override;
+
+	/************************************************************************/
+	/* DELEGATES                                                            */
+	/************************************************************************/
+
+	void OnTargetDatatableSelected(const FAssetData& SelectedAsset);
 
 };
 
