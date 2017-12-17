@@ -20,7 +20,7 @@ UObject* UGameEventFactory::FactoryCreateNew(UClass* Class, UObject* InParent, F
 {
 	check(Class->IsChildOf(UGameEvent::StaticClass()));
 	UBlueprint* Blueprint = FKismetEditorUtilities::CreateBlueprint(Class, InParent, Name, BPTYPE_Normal, UBlueprint::StaticClass(), UBlueprintGeneratedClass::StaticClass(), TEXT("AssetTypeActions"));
-	if (UGameEvent* NewGameEvent = Cast<UGameEvent>(Blueprint->GetBlueprintClass()))
+	if (UGameEvent* NewGameEvent = Cast<UGameEvent>(Blueprint->GeneratedClass->GetDefaultObject()))
 		NewGameEvent->Id = FGuid::NewGuid();
 
 	return Blueprint;
