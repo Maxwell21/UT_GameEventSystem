@@ -42,6 +42,7 @@ public class UT_GameEventSystemEditor : ModuleRules
                 "SlateCore",
                 "EditorStyle",
                 "UnrealEd",
+                "ContentBrowser",
                 "AssetTools",
                 "Projects",
                 "LevelEditor",
