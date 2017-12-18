@@ -1,0 +1,28 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.1",
+	"FriendlyName": "Game Event System",
+	"Description": "A flexible event system",
+	"Category": "Umbra Tools",
+	"CreatedBy": "Axel Clerget - Maxwell",
+	"CreatedByURL": "www.axelcerget.com",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "UT_GameEventSystem",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "UT_GameEventSystemEditor",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
+		}
+	]
+}
