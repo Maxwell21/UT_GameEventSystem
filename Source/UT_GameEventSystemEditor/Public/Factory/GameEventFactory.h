@@ -10,6 +10,7 @@
 #include "Widgets/DeclarativeSyntaxSupport.h"
 #include "Widgets/SWindow.h"
 #include "Widgets/SCompoundWidget.h"
+#include "Reply.h"
 #include "UObject/ObjectMacros.h"
 #include "Factories/Factory.h"
 #include "GameEventFactory.generated.h"
@@ -26,12 +27,16 @@ public:
 
 	SLATE_BEGIN_ARGS(SGameEventSetupFactory)
 	{}
-		SLATE_ARGUMENT(class UGameEventFactory*, GEFactory)
+		SLATE_ARGUMENT(class UGameEventFactory*, Factory)
 	SLATE_END_ARGS()
 
 	/************************************************************************/
 	/* PROPERTIES                                                           */
 	/************************************************************************/
+
+	bool PropertiesConfigured;
+
+	class UGameEventFactory* Factory;
 
 	FText Name;
 
@@ -41,11 +46,6 @@ public:
 
 	FName CancelTag;
 
-	UDataTable* GameplayTagDatatable;
-
-protected:
-
-	class UGameEventFactory* GEFactory;
 
 public:
 
@@ -62,8 +62,7 @@ public:
 
 	inline bool IsValid()
 	{
-		return this->GameplayTagDatatable != nullptr
-			&& !this->Name.ToString().IsEmpty()
+		return !this->Name.ToString().IsEmpty()
 			&& !this->ActivateTag.IsNone()
 			&& !this->CompleteTag.IsNone()
 			&& !this->CancelTag.IsNone()
@@ -81,6 +80,8 @@ public:
 	void OnGameEventCompleteTagChanged(const FText& NewText);
 
 	void OnGameEventCancelTagChanged(const FText& NewText);
+
+	FReply AddButtonClicked();
 
 };
 
@@ -100,9 +101,13 @@ protected:
 
 	TSharedPtr<SGameEventSetupFactory> GESetup;
 
-	TSharedPtr<SWindow> PickerWindow;
-
 public:
+
+	TSharedPtr<SWindow> Window;
+
+	UPROPERTY()
+	UDataTable* GameplayTagDatatable;
+
 
 	/************************************************************************/
 	/* METHODS                                                              */
