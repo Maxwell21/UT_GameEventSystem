@@ -55,6 +55,31 @@ void SGameEventSetupFactory::Construct(const FArguments& InArgs)
 			.FillWidth(1.f)
 			[
 				SNew(STextBlock)
+				.Text(LOCTEXT("GameEventFactory_KeyLabel", "Event Key"))
+			]
+			+SHorizontalBox::Slot()
+			.HAlign(HAlign_Right)
+			[
+				SNew(SBox)
+				.MinDesiredWidth(70.f)
+				[
+					SNew(SEditableTextBox)
+					.Text(LOCTEXT("GameEventFactory_Key", ""))
+					.OnTextChanged(this, &SGameEventSetupFactory::OnGameEventKeyChanged)
+					.SelectAllTextWhenFocused(true)
+					.RevertTextOnEscape(true)
+				]
+			]
+		]
+		+SVerticalBox::Slot()
+		.AutoHeight()
+		.Padding(10.f, 10.f)
+		[
+			SNew(SHorizontalBox)
+			+SHorizontalBox::Slot()
+			.FillWidth(1.f)
+			[
+				SNew(STextBlock)
 				.Text(LOCTEXT("GameEventFactory_NameLabel", "Event Name"))
 			]
 			+SHorizontalBox::Slot()
@@ -183,6 +208,11 @@ void SGameEventSetupFactory::Construct(const FArguments& InArgs)
 	];
 }
 
+void SGameEventSetupFactory::OnGameEventKeyChanged(const FText& NewText)
+{
+	this->Key = NewText.ToString();
+}
+
 void SGameEventSetupFactory::OnGameEventNameChanged(const FText& NewText)
 {
 	this->Name = NewText;
@@ -290,6 +320,7 @@ UObject* UGameEventFactory::FactoryCreateNew(UClass* Class, UObject* InParent, F
 		TagManager.LoadGameplayTagTables();
 
 		NewGameEvent->Id = FGuid::NewGuid();
+		NewGameEvent->Key = this->GESetup->Key;
 		NewGameEvent->Name = this->GESetup->Name;
 
 		const FString Prefix = "GES." + NewGameEvent->Name.ToString() + ".";

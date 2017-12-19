@@ -38,6 +38,8 @@ public:
 
 	class UGameEventFactory* Factory;
 
+	FString Key;
+
 	FText Name;
 
 	FName ActivateTag;
@@ -62,7 +64,8 @@ public:
 
 	inline bool IsValid()
 	{
-		return !this->Name.ToString().IsEmpty()
+		return !this->Key.IsEmpty()
+			&& !this->Name.ToString().IsEmpty()
 			&& !this->ActivateTag.IsNone()
 			&& !this->CompleteTag.IsNone()
 			&& !this->CancelTag.IsNone()
@@ -73,6 +76,8 @@ public:
 	/* DELEGATES                                                            */
 	/************************************************************************/
 
+	void OnGameEventKeyChanged(const FText& NewText);
+	
 	void OnGameEventNameChanged(const FText& NewText);
 
 	void OnGameEventActivateTagChanged(const FText& NewText);
