@@ -37,6 +37,12 @@ public:
 	FGuid Id;
 
 	/**
+	* Unique Key
+	*/
+	UPROPERTY(Category = "Game Event", BlueprintReadOnly, EditDefaultsOnly)
+	FString Key;
+
+	/**
 	* Event name
 	*/
 	UPROPERTY(Category = "Game Event", BlueprintReadOnly, EditDefaultsOnly)
@@ -342,7 +348,7 @@ protected:
 	{
 		for (TFieldIterator<PropertyType> Property(this->GetClass()); Property; ++Property)
 		{
-			if (VariableName.ToString() == Property->GetName())
+			if (VariableName == *Property->GetName())
 			{
 				Property->SetPropertyValue_InContainer(this, Value);
 				this->UpdateBehavior();

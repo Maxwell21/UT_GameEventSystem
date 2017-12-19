@@ -8,6 +8,7 @@
 #include "GameFramework/Actor.h"
 #include "GameplayTagContainer.h"
 #include "Engine/World.h"
+#include "EngineUtils.h"
 #include "GameEventManager.generated.h"
 
 class UGameEventContainer;
@@ -29,6 +30,8 @@ public:
 	/************************************************************************/
 	/* PROPERTIES                                                           */
 	/************************************************************************/
+
+	static AGameEventManager* GameEventManagerInstance;
 
 	UPROPERTY(Category = "Game Event Manager", BlueprintReadWrite, EditDefaultsOnly, meta = (DisplayName = "Game Event Container"))
 	UGameEventContainer* GameEventContainerBase;
@@ -79,6 +82,16 @@ public:
 	virtual UGameEvent* GetGameEventById(FGuid Id);
 
 	/**
+	* Get GameEvent with the key given
+	*
+	* @param FString Key
+	*
+	* @return UGameEvent* - Instance found or nullptr
+	*/
+	UFUNCTION(Category = "Game Event Manager", BlueprintCallable)
+	virtual UGameEvent* GetGameEventByKey(FString Key);
+
+	/**
 	* Get all active GameEvents
 	*
 	* @return TArray<UGameEvent*> - Empty array or with valid active GameEvent
@@ -126,4 +139,32 @@ public:
 	*/
 	UFUNCTION(Category = "Game Event Manager", BlueprintCallable)
 	virtual void TryCancelEvents(FGameplayTagContainer EventsTags);
+
+	/**
+	* Get event manager singleton instance found or nullptr otherwise
+	*
+	* @param UObject* WorldObjectContext
+	*/
+	UFUNCTION(Category = "Game Event Manager", BlueprintPure, meta = (CompactNodeTitle = "EventManager", WorldContext = "WorldObjectContext"))
+	static inline AGameEventManager* GetEventManager(UObject* WorldObjectContext)
+	{
+		// We have already instance
+		if (AGameEventManager::GameEventManagerInstance)
+			return AGameEventManager::GameEventManagerInstance;
+
+		// No valid world ? we quit this method
+		if (WorldObjectContext->GetWorld() == nullptr)
+			return nullptr;
+
+		// Loop through all managers in the level and return the first found
+		for (TActorIterator<AGameEventManager> ActorItr(WorldObjectContext->GetWorld()); ActorItr; ++ActorItr)
+		{
+			// Store and return instance
+			AGameEventManager::GameEventManagerInstance = *ActorItr;
+			return AGameEventManager::GameEventManagerInstance;
+		}
+
+		// No solution
+		return nullptr;
+	};
 };

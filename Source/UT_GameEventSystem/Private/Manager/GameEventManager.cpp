@@ -8,6 +8,8 @@
 #include "Object/GameEvent.h"
 #include "Engine.h"
 
+AGameEventManager* AGameEventManager::GameEventManagerInstance = nullptr;
+
 AGameEventManager::AGameEventManager(const FObjectInitializer& Obj) : Super(Obj)
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -75,6 +77,20 @@ UGameEvent* AGameEventManager::GetGameEventById(FGuid Id)
 		for (UGameEvent* const& GameEvent : this->GameEventContainer->GameEvents)
 		{
 			if (GameEvent->Id == Id && GameEvent->IsActive())
+				return GameEvent;
+		}
+	}
+
+	return nullptr;
+}
+
+UGameEvent* AGameEventManager::GetGameEventByKey(FString Key)
+{
+	if (this->GameEventContainer)
+	{
+		for (UGameEvent* const& GameEvent : this->GameEventContainer->GameEvents)
+		{
+			if (GameEvent->Key == Key && GameEvent->IsActive())
 				return GameEvent;
 		}
 	}
