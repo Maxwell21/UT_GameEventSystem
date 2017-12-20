@@ -42,6 +42,9 @@ void AGameEventManager::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	if (GEngine)
 		GEngine->ForceGarbageCollection(true);
 
+	/* Clean pointer reference */
+	AGameEventManager::GameEventManagerInstance = nullptr;
+
 	Super::EndPlay(EndPlayReason);
 }
 
