@@ -103,12 +103,24 @@ void UGameEvent::SetValueAsFloat(FName VariableName, float Value)
 
 void UGameEvent::SetValueAsVector(FName VariableName, FVector Value)
 {
-	// TODO
+	if (FVector* ValuePtr = this->GetValueAsProperty<UStructProperty, FVector>(VariableName))
+	{
+		ValuePtr->X = Value.X;
+		ValuePtr->Y = Value.Y;
+		ValuePtr->Z = Value.Z;
+		this->UpdateBehavior();
+	}
 }
 
 void UGameEvent::SetValueAsRotator(FName VariableName, FRotator Value)
 {
-	// TODO
+	if (FRotator* ValuePtr = this->GetValueAsProperty<UStructProperty, FRotator>(VariableName))
+	{
+		ValuePtr->Pitch = Value.Pitch;
+		ValuePtr->Yaw   = Value.Yaw;
+		ValuePtr->Roll  = Value.Roll;
+		this->UpdateBehavior();
+	}
 }
 
 void UGameEvent::SetValueAsString(FName VariableName, FString Value)
