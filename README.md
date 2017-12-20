@@ -1,4 +1,4 @@
-# UT_GameEventSystem 1.1
+# UT_GameEventSystem 1.2
 A flexible event system in Unreal Engine 4
 
 Based on the powerful "GameplayTags" system, the UT_GameEventSystem can provide a flexible event system.

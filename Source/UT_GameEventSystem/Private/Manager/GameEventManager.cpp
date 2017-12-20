@@ -8,6 +8,8 @@
 #include "Object/GameEvent.h"
 #include "Engine.h"
 
+AGameEventManager* AGameEventManager::GameEventManagerInstance = nullptr;
+
 AGameEventManager::AGameEventManager(const FObjectInitializer& Obj) : Super(Obj)
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -39,6 +41,9 @@ void AGameEventManager::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	this->GameEventContainer = nullptr;
 	if (GEngine)
 		GEngine->ForceGarbageCollection(true);
+
+	/* Clean pointer reference */
+	AGameEventManager::GameEventManagerInstance = nullptr;
 
 	Super::EndPlay(EndPlayReason);
 }
@@ -75,6 +80,20 @@ UGameEvent* AGameEventManager::GetGameEventById(FGuid Id)
 		for (UGameEvent* const& GameEvent : this->GameEventContainer->GameEvents)
 		{
 			if (GameEvent->Id == Id && GameEvent->IsActive())
+				return GameEvent;
+		}
+	}
+
+	return nullptr;
+}
+
+UGameEvent* AGameEventManager::GetGameEventByKey(FString Key)
+{
+	if (this->GameEventContainer)
+	{
+		for (UGameEvent* const& GameEvent : this->GameEventContainer->GameEvents)
+		{
+			if (GameEvent->Key == Key && GameEvent->IsActive())
 				return GameEvent;
 		}
 	}

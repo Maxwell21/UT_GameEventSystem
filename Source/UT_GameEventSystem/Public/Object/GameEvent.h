@@ -37,6 +37,12 @@ public:
 	FGuid Id;
 
 	/**
+	* Unique Key
+	*/
+	UPROPERTY(Category = "Game Event", BlueprintReadOnly, EditDefaultsOnly)
+	FString Key;
+
+	/**
 	* Event name
 	*/
 	UPROPERTY(Category = "Game Event", BlueprintReadOnly, EditDefaultsOnly)
@@ -316,7 +322,7 @@ protected:
 	virtual bool IsAbleCancel();
 
 	/**
-	* If some GameEventCompoenent listen the same "ActivationRequire" we inform them
+	* If some GameEventComponent listen the same "ActivationRequire" we inform them
 	*/
 	virtual void TryActivateAllComponents();
 
@@ -329,26 +335,58 @@ protected:
 	virtual void DispatchToComponents(FGameplayTagContainer Tags);
 
 	/**
+	* Cancel all tasks 
+	*/
+	virtual void PerformCancelEvent();
+
+	/**
 	* Set value to the variable given
 	*
 	* @param FName VariableName
 	* @param ValueType Value - template value
 	*/
-	virtual void PerformCancelEvent();
-
-	/**/
 	template<class PropertyType, class ValueType>
 	void SetValueAsProperty(FName VariableName, ValueType Value)
 	{
 		for (TFieldIterator<PropertyType> Property(this->GetClass()); Property; ++Property)
 		{
-			if (VariableName.ToString() == Property->GetName())
+			if (VariableName == *Property->GetName())
 			{
 				Property->SetPropertyValue_InContainer(this, Value);
+
 				this->UpdateBehavior();
+				break;
 			}
 		}
 
+	};
+
+	/**
+	* get value of the variable given
+	*
+	* @param FName VariableName
+
+	* @return pointer to the value found
+	*/
+	template<class PropertyType, class ValueType>
+	ValueType* GetValueAsProperty(FName VariableName)
+	{
+		for (TFieldIterator<PropertyType> Property(this->GetClass()); Property; ++Property)
+		{
+			if (VariableName == *Property->GetName())
+			{
+				// check if it's a struct or classic property
+				if (UStructProperty* StructProperty = Cast<UStructProperty>(*Property))
+				{
+					if (ValueType* Value = StructProperty->ContainerPtrToValuePtr<ValueType>(this))
+						return Value;
+				}
+				
+				break;
+			}
+		}
+
+		return nullptr;
 	};
 
 	// --------------------------------------
